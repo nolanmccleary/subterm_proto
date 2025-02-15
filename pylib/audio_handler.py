@@ -1,10 +1,12 @@
 #! python3.7
 import numpy as np
 import speech_recognition as sr
-import threading
+from time import sleep
+#import threading
 
 from datetime import datetime, timedelta, timezone
-from collections import deque
+#from collections import deque
+from queue import Queue
 from sys import platform
 
 
@@ -25,7 +27,8 @@ class Audio_Handler:
         self.mic_index = -1
         self.source = None
 
-        self.data_queue = ThreadSafeDeque(maxlen=3) #TODO: Figure out appropriate sizing
+        #self.data_queue = ThreadSafeDeque(maxlen=3) #TODO: Figure out appropriate sizing
+        self.data_queue = Queue()
         self.recorder = sr.Recognizer()
 
         self.phrase_complete = False
@@ -47,8 +50,8 @@ class Audio_Handler:
         self.get_mic_index()
         if self.mic_index == -1:
             print("Error! Cannot get mic index")
-        self.source = sr.Microphone(sample_rate=self.sample_rate, device_index=self.mic_index)
-
+        #self.source = sr.Microphone(sample_rate=self.sample_rate, device_index=self.mic_index)
+        self.source = sr.Microphone(sample_rate=self.sample_rate)
 
 
     def initialize_recorder(self):
@@ -66,17 +69,21 @@ class Audio_Handler:
         now = datetime.now(timezone.utc)
         #Check 1: We have audio data
         #Check 2: Our phrase is complete
-        if self.data_queue: 
+        if not self.data_queue.empty(): 
             if now - self.time > timedelta(seconds=self.phrase_timeout):
                 self.phrase_complete = True
                 self.time = now
 
             else: 
                 self.phrase_complete = False
-            print("DATA QUEUE: " + str(self.data_queue))
-            self.audio_buffer = np.frombuffer(b''.join(self.data_queue), dtype=np.int16).astype(np.float32) / 32768.0
+            self.audio_buffer = np.frombuffer(b''.join(self.data_queue.queue), dtype=np.int16).astype(np.float32) / 32768.0
+            self.data_queue.queue.clear()
             return True
-        return False
+        
+        else:
+            sleep(0.25)
+            return False
+
 
 ################################## AUXILLARY FUNCTIONS ############################################################################
     def get_mic_index(self):
@@ -93,7 +100,7 @@ class Audio_Handler:
     def record_callback(self, _, audio: sr.AudioData) -> None:
         print("callback")
         data = audio.get_raw_data()
-        self.data_queue.append(data)
+        self.data_queue.put(data)
         
 
 
@@ -115,6 +122,8 @@ class Audio_Handler:
 ######################################### Deque isn't thread-safe by default ####################################################
 
 #TODO: Make this true circular
+
+'''
 class ThreadSafeDeque:
     def __init__(self, maxlen=None):
         self.deque = deque(maxlen=maxlen)
@@ -147,3 +156,4 @@ class ThreadSafeDeque:
     def clear(self):
         with self.lock:
             self.deque.clear()
+'''

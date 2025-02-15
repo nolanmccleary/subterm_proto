@@ -14,7 +14,9 @@ def main():
     print("Begin audio capture")
     while True:
         try:
+            print(gAudio.data_queue.qsize())
             gTranscript.process_audio()
+            gAudio.data_queue.qsize()
             #gTranscript.print_transcript_latest()
     
         except KeyboardInterrupt:

@@ -41,25 +41,6 @@ def main():
 
     source = sr.Microphone(sample_rate=16000)
 
-    # Important for linux users.
-    # Prevents permanent application hang and crash by using the wrong Microphone
-    if 'linux' in platform:
-        mic_name = args.default_microphone
-        print("MICROPHONE NAME: " + str(mic_name))
-        if not mic_name or mic_name == 'list':
-            print("Available microphone devices are: ")
-            for index, name in enumerate(sr.Microphone.list_microphone_names()):
-                print(f"Microphone with name \"{name}\" found")
-            return
-        else:
-            for index, name in enumerate(sr.Microphone.list_microphone_names()):
-                print("MIC NAME: " + str(name) + " MIC_INDEX: " + str(index))
-                if mic_name in name:
-                    print("CHOSEN MIC NAME: " + str(name) + "CHOSEN MIC_INDEX: " + str(index))
-                    source = sr.Microphone(sample_rate=16000, device_index=index)
-                    break
-    else:
-        source = sr.Microphone(sample_rate=16000)
 
     # Load / Download model
     model = args.model
@@ -80,6 +61,7 @@ def main():
         Threaded callback function to receive audio data when recordings finish.
         audio: An AudioData containing the recorded bytes.
         """
+        print("callback")
         data = audio.get_raw_data()
         data_queue.put(data)
 
