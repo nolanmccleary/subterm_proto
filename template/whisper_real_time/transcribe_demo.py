@@ -32,14 +32,11 @@ def main():
                                  "Run this with 'list' to view available Microphones.", type=str)
     args = parser.parse_args()
 
-    # The last time a recording was retrieved from the queue.
+
     phrase_time = None
-    # Thread safe Queue for passing data from the threaded recording callback.
     data_queue = Queue()
-    # We use SpeechRecognizer to record our audio because it has a nice feature where it can detect when speech ends.
     recorder = sr.Recognizer()
     recorder.energy_threshold = args.energy_threshold
-    # Definitely do this, dynamic energy compensation lowers the energy threshold dramatically to a point where the SpeechRecognizer never stops recording.
     recorder.dynamic_energy_threshold = False
 
     source = sr.Microphone(sample_rate=16000)
@@ -48,6 +45,7 @@ def main():
     # Prevents permanent application hang and crash by using the wrong Microphone
     if 'linux' in platform:
         mic_name = args.default_microphone
+        print("MICROPHONE NAME: " + str(mic_name))
         if not mic_name or mic_name == 'list':
             print("Available microphone devices are: ")
             for index, name in enumerate(sr.Microphone.list_microphone_names()):
@@ -55,7 +53,9 @@ def main():
             return
         else:
             for index, name in enumerate(sr.Microphone.list_microphone_names()):
+                print("MIC NAME: " + str(name) + " MIC_INDEX: " + str(index))
                 if mic_name in name:
+                    print("CHOSEN MIC NAME: " + str(name) + "CHOSEN MIC_INDEX: " + str(index))
                     source = sr.Microphone(sample_rate=16000, device_index=index)
                     break
     else:
@@ -80,18 +80,16 @@ def main():
         Threaded callback function to receive audio data when recordings finish.
         audio: An AudioData containing the recorded bytes.
         """
-        # Grab the raw bytes and push it into the thread safe queue.
         data = audio.get_raw_data()
         data_queue.put(data)
 
+
     # Create a background thread that will pass us raw audio bytes.
-    # We could do this manually but SpeechRecognizer provides a nice helper.
     recorder.listen_in_background(source, record_callback, phrase_time_limit=record_timeout)
 
-    # Cue the user that we're ready to go.
     print("Model loaded.\n")
-
     while True:
+        print(data_queue.qsize())
         try:
             now = datetime.utcnow()
             # Pull raw recorded audio from the queue.
@@ -142,4 +140,5 @@ def main():
 
 
 if __name__ == "__main__":
+    print("PLATFORM: " + str(platform))
     main()
