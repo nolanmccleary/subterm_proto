@@ -1,5 +1,4 @@
 #! python3.7
-from time import sleep
 from sys import platform
 
 from pylib import Transcription_Handler
