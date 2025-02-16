@@ -1,4 +1,6 @@
-from preprocessor import Preprocessor, Source_Handler
+from preprocessor import Preprocessor
+from audio_pipeline import Source_Handler
+
 import threading
 
 
