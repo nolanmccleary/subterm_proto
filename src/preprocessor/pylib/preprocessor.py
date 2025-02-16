@@ -1,6 +1,6 @@
 from audio_pipeline.pylib import Source_Handler
 from audio_slicer.pylib import Frame_Handler
-from model_handler.pylib import Model_Handler
+from vad_handler.pylib import VAD_Handler
 
 
 class Preprocessor:
@@ -8,7 +8,7 @@ class Preprocessor:
     def __init__(self, source: Source_Handler):
         self.source = source
         self.frame_handler = Frame_Handler()
-        self.model_handler = Model_Handler()
+        self.model_handler = VAD_Handler()
 
 
     def process_chunk(self):

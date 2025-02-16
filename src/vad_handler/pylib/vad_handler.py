@@ -1,7 +1,7 @@
 import torch
 
 #TODO: Change this to VAD_Handler; add top-level whisper/VAD handler
-class Model_Handler:
+class VAD_Handler:
     
     def __init__(self):
         self.model, self.utils = torch.hub.load(repo_or_dir='snakers4/silero-vad',
