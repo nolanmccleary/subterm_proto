@@ -11,4 +11,6 @@
  4. Output handler: -> Way less optimization needed but a c/cpp implementation is required in order to package the whole thing as a binary 
  
 
- 
+ # TODO:
+ 1) Get local VAD model set up
+ 2) Design audio router architecture
