@@ -9,7 +9,7 @@ import pyaudio
 
 class Source_Handler:
 
-    def __init__(self, format=pyaudio.paInt16, channels=1, sample_rate=16000, num_samples=512):
+    def __init__(self, mode='microphone', format=pyaudio.paInt16, channels=1, sample_rate=16000, num_samples=512):
         self.format = format
         self.channels = channels
         self.sample_rate = sample_rate

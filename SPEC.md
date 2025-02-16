@@ -4,6 +4,7 @@
  3. Model handler (whispercpp for final implementation)
  4. Output handler (terminal feed)
 
+
  ## Optimization Hierarchy
  1. Model: -> whispercpp
  2. Audio slicer: -> Custom VAD/slicer implementation in cpp
@@ -12,5 +13,5 @@
  
 
  # TODO:
- 1) Get local VAD model set up
- 2) Design audio router architecture
+ 1) Get full prototype for basic mic feed
+ 2) Design audio router architecture (this will be a pain in the ass because there is no pre-built library for speaker audio capture)
