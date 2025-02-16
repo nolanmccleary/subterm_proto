@@ -1,7 +1,10 @@
 #This module controls the ingoing audio feed.
 #There are two possible source types: 1) Microphone Audio Stream, 2) Speaker Audio Stream
-import pyaudio
 
+#TODO: Implement speaker audio stream and selection mechanism
+
+
+import pyaudio
 
 
 class Source_Handler:
@@ -13,10 +16,6 @@ class Source_Handler:
         self.num_samples = num_samples
         self.chunk = int(sample_rate / 10)
         self.audio = pyaudio.PyAudio()
-
-
-
-    def initialize_stream(self):
         self.stream = self.audio.open(format=self.format,
                                       channels=self.channels,
                                       rate=self.sample_rate,

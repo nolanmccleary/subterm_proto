@@ -12,4 +12,11 @@ class Preprocessor:
 
 
     def process_chunk(self):
-        return self.model_handler.get_confidence(self.frame_handler.get_frame(self.source.get_chunk()))
+        frame = self.frame_handler.get_frame(self.source.get_chunk())
+        return (frame, self.model_handler.get_confidence(frame))
+    
+
+
+
+
+

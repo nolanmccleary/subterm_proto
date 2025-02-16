@@ -1,5 +1,6 @@
 import torch
 
+#TODO: Change this to VAD_Handler; add top-level whisper/VAD handler
 class Model_Handler:
     
     def __init__(self):
