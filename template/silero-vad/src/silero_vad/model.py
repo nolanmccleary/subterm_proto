@@ -3,6 +3,7 @@ import torch
 torch.set_num_threads(1)
 
 
+#This extremely questionable function loads your target model in the most obtuse way possible
 def load_silero_vad(onnx=False, opset_version=16):
     available_ops = [15, 16]
     if onnx and opset_version not in available_ops:

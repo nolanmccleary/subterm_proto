@@ -2,6 +2,7 @@ import torch
 import torchaudio
 from typing import Callable, List
 import warnings
+import numpy as np
 
 languages = ['ru', 'en', 'de', 'es']
 
@@ -9,8 +10,6 @@ languages = ['ru', 'en', 'de', 'es']
 class OnnxWrapper():
 
     def __init__(self, path, force_onnx_cpu=False):
-        import numpy as np
-        global np
         import onnxruntime
 
         opts = onnxruntime.SessionOptions()
