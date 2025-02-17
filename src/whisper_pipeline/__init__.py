@@ -1,1 +1,1 @@
-from .pylib.audio_queue import Audio_Queue
+from .pylib.whisper_handler import Whisper_Handler

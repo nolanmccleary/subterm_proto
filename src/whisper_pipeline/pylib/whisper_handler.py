@@ -17,7 +17,7 @@ We want a full context buffer because the model is most accurate this way.
 Keep in mind 'word' here is used very loosely and it's more like a discrete unit of voice data that can be converted to an attention vector
 """
 
-#The idea is to pass this thing a source and a whisper model and it generates a transcript
+
 class Whisper_Handler:
 
     def __init__(self, source: Source_Handler, model: Whisper, transcript):
@@ -27,33 +27,23 @@ class Whisper_Handler:
         self.listener = Listener(self.source, self.audio_data)  #Listener thread starts in background here
         self.transcript = transcript
         self.context = []
-        self.continue_transcription = False
 
 
 
     def poll_model(self):
         (words, count) = self.audio_data.dump()
+        cpy = count
         while count > 0:
-            context = flatten_list(words[0 : -1 * count])
+            context = flatten_list(words[0 : -count])
             result =  self.model.transcribe(context, fp16=torch.cuda.is_available())
             self.transcript.append(result)
             count -= 1
-
-
-
-    def transcribe_audio(self):
-        self.continue_transcription = True
-        while self.continue_transcription:
-            self.poll_model()
-            print(self.transcript[-1])
+        return cpy
 
 
 
     def activate(self):
-        thread2 = self.listener.start_audio_capture()
-        thread1 = threading.Thread(target=self.transcribe_audio)
-        thread1.start
-        return (thread1, thread2)
+        self.listener.start_audio_capture()
 
 
 
