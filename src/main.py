@@ -19,7 +19,6 @@ transcript = ['']
 
 
 
-
 '''
 #TODO: If this works well, do it in CUDA
 FILTER_LEN = 3
