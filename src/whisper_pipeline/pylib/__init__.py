@@ -1,1 +1,1 @@
-from audio_queue import Audio_Queue
+from .whisper_handler import Whisper_Handler

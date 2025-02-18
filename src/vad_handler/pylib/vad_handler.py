@@ -24,8 +24,6 @@ class VAD_Handler:
         
          
 
-        
-
     #Gets confidence that given audio chunk contains voice data
     def get_confidence(self, audio_float32):
         return self.model(torch.from_numpy(audio_float32), 16000).item()

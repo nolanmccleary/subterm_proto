@@ -1,7 +1,7 @@
 from .audio_queue import Audio_Queue, flatten_list
 from .listener import Listener
 from audio_pipeline import Source_Handler
-import threading
+import numpy as np
 import torch
 from whisper import Whisper
 
@@ -14,8 +14,12 @@ We want a full context buffer because the model is most accurate this way.
 
 2) We then take the model output and add it to our transcript.
 
-Keep in mind 'word' here is used very loosely and it's more like a discrete unit of voice data that can be converted to an attention vector
+Keep in mind 'word' here is used very loosely and it's more like a discrete unit of voice data
 """
+
+
+#TODO: Figure out model context specs
+
 
 
 class Whisper_Handler:
@@ -35,8 +39,8 @@ class Whisper_Handler:
         cpy = count
         while count > 0:
             context = flatten_list(words[0 : -count])
-            result =  self.model.transcribe(context, fp16=torch.cuda.is_available())
-            self.transcript.append(result)
+            result =  self.model.transcribe(np.array(context), fp16=torch.cuda.is_available())
+            self.transcript.append(result['text'].strip())
             count -= 1
         return cpy
 

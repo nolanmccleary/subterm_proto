@@ -2,7 +2,7 @@ from audio_pipeline.pylib import Source_Handler
 from audio_slicer.pylib import Frame_Handler
 from vad_handler.pylib import VAD_Handler
 
-
+#TODO: Get rid of this
 class Preprocessor:
 
     def __init__(self, source: Source_Handler, filter_weights=[0.165, 0.165, 0.67]):
