@@ -1,6 +1,7 @@
-from .audio_queue import Audio_Queue, flatten_list
+from audio_pipeline import Audio_Queue, flatten_list
 from .listener import Listener
 from audio_pipeline import Source_Handler
+from vad_handler import VAD_Handler
 import numpy as np
 import torch
 from whisper import Whisper
@@ -26,9 +27,10 @@ class Whisper_Handler:
 
     def __init__(self, source: Source_Handler, model: Whisper, transcript):
         self.source = source
+        self.vad = VAD_Handler()
         self.model = model
         self.audio_data = Audio_Queue()
-        self.listener = Listener(self.source, self.audio_data)  #Listener thread starts in background here
+        self.listener = Listener(self.source, self.vad, self.audio_data)  #Listener thread starts in background here
         self.transcript = transcript
         self.context = []
 
@@ -43,11 +45,6 @@ class Whisper_Handler:
             self.transcript.append(result['text'].strip())
             count -= 1
         return cpy
-
-
-
-    def activate(self):
-        self.listener.start_audio_capture()
 
 
 

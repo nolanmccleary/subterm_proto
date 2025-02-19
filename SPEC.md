@@ -13,5 +13,16 @@
  
 
  # TODO:
- 1) Get full prototype for basic mic feed
- 2) Design audio router architecture (this will be a pain in the ass because there is no pre-built library for speaker audio capture)
+ 1) Clean up code and remove un-necessary objects
+ 2) Better list flattening
+ 3) Optimize all python code / redundant operation check
+ 4) Figure out whisper context optimization
+ 5) Refine display logic
+ 6) Move to whispercpp
+ 7) Thread safety fixes
+
+
+
+
+
+ 69) Design audio router architecture (this will be a pain in the ass because there is no pre-built library for speaker audio capture)

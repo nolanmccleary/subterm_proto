@@ -1,20 +1,18 @@
-from audio_pipeline import Source_Handler
-from .audio_queue import Audio_Queue, flatten_list
-from preprocessor import Preprocessor
+from audio_pipeline import Source_Handler, Audio_Queue, get_frame, flatten_list
+from vad_handler import VAD_Handler
 import threading
 
 
 class Listener:
 
-    def __init__(self, source: Source_Handler, audio_data: Audio_Queue, sensitivity=0.5):
+    def __init__(self, source: Source_Handler, vad: VAD_Handler, audio_data: Audio_Queue, sensitivity=0.5):
         self.source = source
+        self.vad = vad
         self.audio_data = audio_data
         self.sensitivity = sensitivity
         self.words_captured = 0
-        self.source = Source_Handler()
-        self.preprocessor = Preprocessor(self.source)
         self.continue_capture = False
-        #self.start_audio_capture()
+        self.start_audio_capture()
 
 
     def capture_audio(self):
@@ -24,7 +22,7 @@ class Listener:
 
         while self.continue_capture:
 
-            (frame, confidence) = self.preprocessor.get_confidence()
+            (frame, confidence) = self.vad.get_confidence(get_frame(self.source.get_chunk()))
             confidence_ceiling = self.sensitivity_ceiling(confidence)
             if prev_confidence_ceiling and not confidence_ceiling: #Word has finished, put in word buffer
                 self.audio_data.put(word_buffer)
