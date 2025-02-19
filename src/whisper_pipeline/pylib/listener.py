@@ -5,11 +5,11 @@ import threading
 
 class Listener:
 
-    def __init__(self, source: Source_Handler, vad: VAD_Handler, audio_data: Audio_Queue, sensitivity=0.5):
+    def __init__(self, source: Source_Handler, vad: VAD_Handler, audio_data: Audio_Queue, threshold=0.5):
         self.source = source
         self.vad = vad
         self.audio_data = audio_data
-        self.sensitivity = sensitivity
+        self.threshold = threshold
         self.words_captured = 0
         self.continue_capture = False
         self.start_audio_capture()
@@ -23,7 +23,7 @@ class Listener:
         while self.continue_capture:
 
             (frame, confidence) = self.vad.get_confidence(get_frame(self.source.get_chunk()))
-            confidence_ceiling = self.sensitivity_ceiling(confidence)
+            confidence_ceiling = self.threshold_ceiling(confidence)
             if prev_confidence_ceiling and not confidence_ceiling: #Word has finished, put in word buffer
                 self.audio_data.put(word_buffer)
 
@@ -37,8 +37,8 @@ class Listener:
 
 
 
-    def sensitivity_ceiling(self, confidence):
-        return True if confidence > self.sensitivity else False
+    def threshold_ceiling(self, confidence):
+        return True if confidence > self.threshold else False
 
 
 
