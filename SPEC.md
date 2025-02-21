@@ -13,7 +13,7 @@
  
 
  # TODO:
- 1) Clean up code and remove un-necessary objects
+ 1) Clean up code and remove un-necessary objects -> DONE
  2) Better list flattening
  3) Optimize all python code / redundant operation check
  4) Figure out whisper context optimization
@@ -22,7 +22,13 @@
  7) Thread safety fixes
 
 
-
-
-
  69) Design audio router architecture (this will be a pain in the ass because there is no pre-built library for speaker audio capture)
+
+
+# Current state of afairs:
+
+The first two lines, I am speaking normally while taking a brief break in the middle. There are small misses but the overall translation quality is decent. However, when I start freestyling, the model has a stroke:
+
+
+Transcript: ["The threshold filtering actually seems to work really well when it's used in conjunction with the VAD.", "Wow, it's even recognizing that that's pretty good. This is way better than I was expecting.", 'ew hook! WOAH! WOAH! WOAH! WOAH! WOAH! WOAH! WOAH! WOAH! WOAH! WOAH! WOAH! WOAH!']
+

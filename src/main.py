@@ -9,7 +9,7 @@ audio_source = Source_Handler()
 whisper_model = whisper.load_model("tiny.en")
 transcript = []
 
-whisper_handler = Whisper_Handler(audio_source, whisper_model, transcript, threshold=0.5)
+whisper_handler = Whisper_Handler(audio_source, whisper_model, transcript, threshold=0.10)
 
 
 #TODO: Redo this section and put the thing in jupyter

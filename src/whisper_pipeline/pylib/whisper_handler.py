@@ -29,7 +29,7 @@ Keep in mind 'word' here is used very loosely and it's more like a discrete unit
 
 class Whisper_Handler:
 
-    def __init__(self, source: Source_Handler, model: Whisper, transcript, threshold = 0.5):
+    def __init__(self, source: Source_Handler, model: Whisper, transcript, threshold = 0.3):
         self.source = source
         self.vad = VAD_Handler()
         self.model = model
@@ -40,13 +40,15 @@ class Whisper_Handler:
         self.context = []
 
 
-
     def poll_model(self):
         (words, count) = self.audio_data.dump()
         cpy = count
+        
         while count > 0:
-            context = flatten_list(words[0 : -count])
+            #print("WORDS" + str(words))
+            context = flatten_list(words)
             result =  self.model.transcribe(np.array(context), fp16=torch.cuda.is_available())
+            #print(result)
             self.transcript.append(result['text'].strip())
             count -= 1
         return cpy
