@@ -13,6 +13,10 @@ from whisper import Whisper
 1) Keep context window full of last n wordly sounds (sounds most likely coming from speech) and feed through model whenver we detect a word has ended (we can have a full context window without a performance drop because transformer models are inherently parallelizeable and everything is running on a GPU).
 We want a full context buffer because the model is most accurate this way.
 
+^ So this is completely wrong and I'm an idiot. Compute time grows quadratically with context size because every attention vector influences every other attention vector.
+I could delete this and squash the commit so I don't incriminate myself but writing this is more fun because its like a time capsule for roasts
+-> Anyways, a context clamp should be added.
+
 2) We then take the model output and add it to our transcript.
 
 Keep in mind 'word' here is used very loosely and it's more like a discrete unit of voice data
