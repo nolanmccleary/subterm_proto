@@ -27,8 +27,16 @@
 
 # Current state of afairs:
 
-The first two lines, I am speaking normally while taking a brief break in the middle. There are small misses but the overall translation quality is decent. However, when I start freestyling, the model has a stroke:
+02/21/2025:
+
+The first two lines I am speaking normally while taking a brief break in the middle to let the model catch up. There are small misses but the overall translation quality is decent. However, when I start freestyling, the model has a stroke:
 
 
 Transcript: ["The threshold filtering actually seems to work really well when it's used in conjunction with the VAD.", "Wow, it's even recognizing that that's pretty good. This is way better than I was expecting.", 'ew hook! WOAH! WOAH! WOAH! WOAH! WOAH! WOAH! WOAH! WOAH! WOAH! WOAH! WOAH! WOAH!']
 
+
+So far two things have been ascertained: 
+
+1) A much faster whisper model should be used
+
+2) Whisper turns into a Choomah when it is overwhelmed
