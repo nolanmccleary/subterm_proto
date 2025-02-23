@@ -1,0 +1,3 @@
+[submodule "src/whisper_pipeline/whisper_models/whisperlite_model/whisperlite"]
+	path = src/whisper_pipeline/whisper_models/whisperlite_model/whisperlite
+	url = https://github.com/nolanmccleary/whisperlite.git

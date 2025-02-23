@@ -16,7 +16,7 @@
  1) Clean up code and remove un-necessary objects -> DONE
  2) Better list flattening
  3) Optimize all python code / redundant operation check
- 4) Figure out whisper context optimization
+ 4) Figure out whisper context optimization -> NEED TO IMPLEMENT DYNAMIC CONTEXT LENGTH, 
  5) Refine display logic
  6) Move to whispercpp
  7) Thread safety fixes
@@ -27,16 +27,23 @@
 
 # Current state of afairs:
 
-02/21/2025:
+## 02/21/2025:
 
 The first two lines I am speaking normally while taking a brief break in the middle to let the model catch up. There are small misses but the overall translation quality is decent. However, when I start freestyling, the model has a stroke:
-
 
 Transcript: ["The threshold filtering actually seems to work really well when it's used in conjunction with the VAD.", "Wow, it's even recognizing that that's pretty good. This is way better than I was expecting.", 'ew hook! WOAH! WOAH! WOAH! WOAH! WOAH! WOAH! WOAH! WOAH! WOAH! WOAH! WOAH! WOAH!']
 
 
 So far two things have been ascertained: 
 
-1) A much faster whisper model should be used
+1) A much faster Whisper model should be used
 
 2) Whisper turns into a Choomah when it is overwhelmed
+
+
+
+## 02/22/2025:
+
+1) Sinusoidal positional encoding is cool, should write about it at some point.
+
+2) Whispercpp needs to be modified to support variable size context windows like in the Python library otherwise there will be like 29.434 seconds of zero-buffering slowing it down each transcription cycle. I think this modification could be substantial enough to justify releasing it as its own fork.

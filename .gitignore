@@ -1,2 +1,7 @@
 *__pycache__
 myenv/*
+template/*
+_whisper_cpp.*
+libwhisper.so*
+*.o
+*.so
