@@ -1,4 +1,5 @@
 from audio_pipeline import Source_Handler, Audio_Queue
+from utils import stop_flag as stop
 from utils import get_frame, flatten_list
 from vad_handler import VAD_Handler
 import threading
@@ -17,12 +18,10 @@ class Listener:
 
 
     def capture_audio(self):
-        self.continue_capture = True
         prev_confidence_ceiling = 0
         word_buffer = []
-
-        while self.continue_capture:
-
+        
+        while not stop.get_status():
             (frame, confidence) = self.vad.get_confidence(get_frame(self.source.get_chunk()))
             confidence_ceiling = self.threshold_ceiling(confidence)
             if prev_confidence_ceiling and not confidence_ceiling: #Word has finished, put in word buffer
@@ -47,12 +46,5 @@ class Listener:
         thread = threading.Thread(target=self.capture_audio)
         thread.start()
         return thread
-    
-
-
-    #Call upon program termination
-    def stop_audio_capture(self):
-        self.capture_audio = False
-
     
 

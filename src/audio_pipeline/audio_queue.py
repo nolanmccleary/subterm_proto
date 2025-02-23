@@ -17,7 +17,6 @@ class Audio_Queue:
             self.queue[self.index] = val
             self.index = (self.index + 1) % self.length
             self.count = min(self.count + 1, self.length)
-            #print("PUSH" + str(val))
 
 
     #Spit out the n <= lengthnewest words added into the queue since last dump
@@ -34,9 +33,6 @@ class Audio_Queue:
                     ret[j] = self.queue[i]
                     i = (i + 1) % self.length
                     j += 1
-                
-                #print("PULL" + str(ret))
-                #print(self.count)
                 self.count = 0
 
             return (ret, count) #returns an array of the last <length> words as well as the number of new words added since the last dump
