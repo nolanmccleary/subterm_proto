@@ -7,7 +7,6 @@ import whisper
 #TODO: Integrate global kill signal for all threads
 
 
-#TODO: Redo this section and put the thing in jupyter
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", type=str, default="tiny", help="Model to use")
@@ -15,7 +14,11 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    model_name = args.model + args.translate_enabled
+    if args.translate_enabled == "ON":
+        model_name = args.model 
+    else:
+        model_name = args.model + args.translate_enabled    #Yes I know this is bizarre and stupid, I'll fix later
+
 
     audio_source = Source_Handler()
     whisper_model = whisper.load_model(model_name)

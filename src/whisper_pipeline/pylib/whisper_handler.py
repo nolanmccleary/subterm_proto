@@ -1,4 +1,5 @@
-from audio_pipeline import Audio_Queue, flatten_list
+from audio_pipeline import Audio_Queue
+from utils import flatten_list
 from .listener import Listener
 from audio_pipeline import Source_Handler
 from vad_handler import VAD_Handler

@@ -1,4 +1,5 @@
-from audio_pipeline import Source_Handler, Audio_Queue, get_frame, flatten_list
+from audio_pipeline import Source_Handler, Audio_Queue
+from utils import get_frame, flatten_list
 from vad_handler import VAD_Handler
 import threading
 
