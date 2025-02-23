@@ -5,16 +5,7 @@ import torch
 class VAD_Handler:
     
     def __init__(self):
-        '''
-        self.model, self.utils = torch.load(self.model_path, weights_only=False)
-        (self.get_speech_timestamps,
-         self.save_audio,
-         self.read_audio,
-         self.VADIterator,
-         self.collect_chunks) = self.utils
-        '''
-        
-        self.model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../model/JIT/silero_vad.jit')
+        self.model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'model/JIT/silero_vad.jit')
 
         torch.set_num_threads(1)
         torch.set_grad_enabled(False)

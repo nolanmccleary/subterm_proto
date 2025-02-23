@@ -1,1 +1,1 @@
-from .pylib.whisper_handler import Whisper_Handler
+from .whisper_handler import Whisper_Handler

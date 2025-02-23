@@ -1,1 +1,1 @@
-from .pylib.vad_handler import VAD_Handler
+from .vad_handler import VAD_Handler
