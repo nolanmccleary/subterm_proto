@@ -4,8 +4,7 @@ from audio_pipeline import Source_Handler
 from vad_handler import VAD_Handler
 import numpy as np
 import torch
-from whisper import Whisper
-
+from faster_whisper import WhisperModel
 
 """
 @Brief: This is how we do - 
@@ -23,13 +22,11 @@ Keep in mind 'word' here is used very loosely and it's more like a discrete unit
 """
 
 
-#TODO: Figure out model context specs
-
 
 
 class Whisper_Handler:
 
-    def __init__(self, source: Source_Handler, model: Whisper, transcript, threshold = 0.15):
+    def __init__(self, source: Source_Handler, model: WhisperModel, transcript, threshold = 0.15):
         self.source = source
         self.vad = VAD_Handler()
         self.model = model

@@ -14,6 +14,5 @@ def get_frame(aChunk):
     
 
 
-#TODO: Make this not stupid
 def flatten_list(list_of_lists):
     return np.array(list(itertools.chain(*list_of_lists)), dtype=np.float32)
