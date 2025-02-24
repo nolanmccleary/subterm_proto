@@ -1,28 +1,26 @@
 # Sub-Components
  1. Audio stream (system audio feed or microphone)
- 2. Audio slicer (need to decide between dsp or ML-based VAD)
- 3. Model handler (whispercpp for final implementation)
+ 2. Audio slicer (need to decide between dsp or ML-based VAD) -> SILERO CHOSEN
+ 3. Model handler (whispercpp or faster_whisper) -> NEED TO TEST BOTH 
  4. Output handler (terminal feed)
 
 
- # Optimization Hierarchy
- 1. Model: -> whispercpp
- 2. Audio slicer: -> Custom VAD/slicer implementation in cpp
- 3. Audio stream: -> Custom pipewire interface
- 4. Output handler: -> Way less optimization needed but a c/cpp implementation is required in order to package the whole thing as a binary -> NOT TRUE, USE PYINSTALLER/NUITKA
+
+The optimization hierarchy was stupid and poorly thought out so i deleted it. I will make a new one when I actually know what I'm doing. The main idea though is the whisper model is by far the most important thing to optimize.
  
+
 
  # TODO:
  1) Clean up code and remove un-necessary objects -> DONE
  2) Better list flattening -> Current method actually works well
- 3) Optimize all python code / redundant operation check
+ 3) Optimize all python code / redundant operation check -> Good enough for now
  4) Figure out whisper context optimization -> NEED TO IMPLEMENT DYNAMIC CONTEXT LENGTH, <-NOT WORTH IT FOR NOW, SHOULD BE DONE AT SOME POINT THO
  5) Refine display logic
- 6) Move to whispercpp -> REDACTED: MOVE TO FASTER_WHISPER; DONE 
- 7) Thread safety fixes
+ 6) Move to whispercpp/faster_whisper -> SHOULD TEST BOTH
+ 7) Thread safety fixes -> DONE
  8) Get a MacOS/Metal port running so I don't have to write all this on my shitbox thinkpad (RIP my suicidal XPS)
 
- 69) Design audio router architecture (this will be a pain in the ass because there is no pre-built library for speaker audio capture)
+ 69) Design audio router architecture (this will be a pain in the ass because there is no pre-built library for direct speaker audio capture)
 
 
 # Current state of afairs:
@@ -52,8 +50,8 @@ So far two things have been ascertained:
 
 ## 02/23/2025:
 
-1) I should start writing these while not sleep-deprived because it's obvious now that the Python library also zero-pads the input, it just does so with the spectrogram buffer converted from the variably-sized array passed to it. This means that based on testing so far, a mostly zeroed context window requires significantly less compute than a full context one, however it's still obviously not ideal. As I learn more about this, it also seems like these changes need to be made at the model architecture level which could be very painful and probably require re-training. It seems like there is an existing technique called varied-size attention window (VSA) that is already used in image transformers, but its main use case is to increase accuracy and it actually increases the overall compute cost of the system. Since our concern is speed not accuracy, I don't think this is applicable in its current form. I think this would be a cool research project actually. Additionally, whispercpp tiny.en seems to be fast enough in its current form for most practical use-cases so I think that this should be another project for another time as there is still opportunity to build a really high-performing system as-is.
+1) I should start writing these while not sleep-deprived because it's obvious now that the Python library also zero-pads the input, it just does so with the spectrogram buffer and not the input array. This means that based on testing so far, a mostly zeroed context window requires significantly less compute than a full context one, however it's still obviously not ideal. As I learn more about this, it also seems like these changes need to be made at the model architecture level which could be very painful and probably require re-training. It seems like there is an existing technique called varied-size attention window (VSA) that is already used in image transformers, but its main use case is to increase accuracy and it actually leads to an increase in overall compute time. Since our concern is speed not accuracy, I don't think this is applicable in its current form though if the overhead was minimal (as it appears to be) it might still be worth it for the sake of improving accuracy, especially on anything that can run it quickly to begin with. Actually, I think this would be a really cool research project.
 
-2) There's a model called faster-whisper that might be faster than whispercpp. If it is still faster, it's because whispercpp's batched decoding scheme is still not implemented well, this might have been fixed by now though in which case whispercpp could be faster. Overall it might be easier to use faster-whisper and then package the whole thing as a binary via pyinstaller/Nuitka, then figure out model improvements afterwards. Current performance is already satisfactory as long as spazzing on the mic does not occur.
+2) There's a model called faster-whisper that might be faster than whispercpp. Both should be tested but I'm thinking it might be easier to use faster-whisper and then package the whole thing as a binary via pyinstaller/Nuitka, then figure out model improvements afterwards. Current performance is already satisfactory as long as spazzing on the mic does not occur.
 
 3) I've intentionally used a really shitty computer for testing so far such that the effects of optimization decisions are viscerally felt. There is a greater than 0% chance that this thing runs way faster on a modern system to the extent that a larger model can be used such that both the transcription quality and speed improves.
