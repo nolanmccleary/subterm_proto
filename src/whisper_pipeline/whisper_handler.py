@@ -23,21 +23,16 @@ class Whisper_Handler:
 
     def poll_model(self):
         (words, count) = self.audio_data.dump()
-        cpy = count
         
-        while count > 0:
+        if count > 0:
             context = flatten_list(words)
-            result =  self.model.transcribe(np.array(context), fp16=torch.cuda.is_available())
-            self.transcript.append(result['text'].strip())
-            count -= 1
-        return cpy
+            #result =  self.model.transcribe(np.array(context), fp16=torch.cuda.is_available())
+            #self.transcript.append(result['text'].strip())
+            
+            segments, _ = self.model.transcribe(np.array(context, dtype=np.float32))
+            for segment in segments:
+                self.transcript.append(segment.text)
+            
 
+        return count
 
-    def poll_model_last_word(self):
-        context = flatten_list(self.audio_data.dump()[0])
-        result = self.model.transcribe(np.array(context), fp16=torch.cuda.is_available())
-        return result['text'].strip()
-
-
-    def deactivate(self):
-        self.listener.stop_audio_capture()

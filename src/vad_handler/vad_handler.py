@@ -1,7 +1,7 @@
 import os
 import torch
 
-#TODO: Change this to VAD_Handler; add top-level whisper/VAD handler
+
 class VAD_Handler:
     
     def __init__(self):
