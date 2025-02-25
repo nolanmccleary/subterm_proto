@@ -26,7 +26,7 @@ if __name__ == "__main__":
     
     transcript = []
 
-    whisper_handler = Whisper_Handler(audio_source, whisper_model, transcript, threshold=0.09)
+    whisper_handler = Whisper_Handler(audio_source, whisper_model, transcript, 0.065)
 
     while not stop.get_status():
         try: 

@@ -13,16 +13,7 @@
  
 
  # TODO:
- 1) Clean up code and remove un-necessary objects -> DONE
- 2) Better list flattening -> Current method actually works well
- 3) Optimize all python code / redundant operation check
- 4) Figure out whisper context optimization -> NEED TO IMPLEMENT DYNAMIC CONTEXT LENGTH, <-NOT WORTH IT FOR NOW, SHOULD BE DONE AT SOME POINT THO
- 5) Refine display logic
- 6) Move to whispercpp -> REDACTED: MOVE TO FASTER_WHISPER; DONE 
- 7) Thread safety fixes
- 8) Get a MacOS/Metal port running so I don't have to write all this on my shitbox thinkpad (RIP my suicidal XPS)
-
- 69) Design audio router architecture (this will be a pain in the ass because there is no pre-built library for speaker audio capture)
+ 1) FULLY UNDERSTAND FASTER_WHISPER CODEBASE
 
 
 # Current state of afairs:
@@ -57,3 +48,40 @@ So far two things have been ascertained:
 2) There's a model called faster-whisper that might be faster than whispercpp. Overall it might be easier to use faster-whisper and then package the whole thing as a binary via pyinstaller/Nuitka, then figure out model improvements afterwards. Current performance is already satisfactory as long as spazzing on the mic does not occur.
 
 3) I've intentionally used a really shitty computer for testing so far such that the effects of optimization decisions are viscerally felt. There is a greater than 0% chance that this thing runs way faster on a modern system to the extent that a larger model can be used such that both the transcription quality and speed improves.
+
+
+## 02/24/2025
+
+1) There has been some really interesting behaviour observed with whisper and especially faster_whisper, I will give an example of what I've been seeing because I think it's funny:
+
+ testing for better truncation.
+ 
+ Okay.
+ 
+ Okay.  <-Repeats word (I think what's happening is the VAD is breaking up one word into multiple word slices where both slices map to the same output word (for example, 
+ okay might get broken into oke-ayy where both oke and ayy predict an okay so okay gets said twice), this can mostly be resolved by fine-tuning the VAD threshold but it's never perfect, I think the best low-effort solution would be to set the VAD threshold dynamically based on the detected background noise present)
+ 
+ Thank you. <-Whenver I chuckle or grunt, it thinks I am thanking it
+ 
+ . <- I dont even know what sort of noise generates a period (my best guess is a grunt or some sort of glottal stop gets associated with a period somewhere in the attention layer but idk)
+ 
+ testing for better truncation. <- Says what it was saying before for some reason, still need to figure this out
+
+ Thanks for watching, and I'll see you in the next one! <- Complete hallucination, I never said this, but I may have grunted
+
+ Thanks.    <- Chuckled again
+
+ That's weird. <- Hey, it finally worked!
+
+
+Verdict: Whisper was trained on a shitload of YouTube.
+
+I think a lot of the issues above could be resolved by using a larger model, but I'm tryna make this this thing ghetto friendly because my T480 potato is the only thing I have right now that can rip cuda.
+
+2) Proposed solution to the "Gracious Model Problem":
+Whenver the model does not understand what I am saying, it tends to think that I am thanking it. This is especially evident in the case of grunts: for some reason, there seems to be something in the attention layer which is associating gruntiness with grattitude. An interesting and very nonrigorously determined result of this is that low intensity grunts are met with a "Thank you" while higher intensity grunts or grunts with a drawn out end are met with a "Thank you very much".
+One naive way this could potentially be solved is by somehow extracting the confidence of answers given and replace them with something like *inaudible* if they are below a certain threshold. We may even be able to loosely identify these noises by things such as energy level, frequency spectrum etc, this way we could further differentiate between grunting, screeching, yodelling etc without using a larger model.
+
+3) faster_whisper seems to have built in support for silero vad which runs on the ONNX runtime, which in theory should be a bit faster than the current torchscript (.jit) implementation I have, however I suspect that this performance boost is trivial. Aside from this, the other main speedups occur due to ctranslate being used for the model backend, and the possibility of batched inference. Upon first glance however, that batched inference seems to be for the cpu and not the gpu. Will need to look into that further. Ctranslate also isn't recognizing my gpu right now, which means that I can't run it in cuda mode. However, even in cpu mode it seems to be a bit faster than the standard whisper model, which is pretty impressive.
+
+4) Right now it seems like pretty much every major pain point I'm dealing with comes down to not fully understanding the actual model/implementation that I'm working with, so I should probably just shut up and read the model code for a few days.
