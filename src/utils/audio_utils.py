@@ -15,4 +15,4 @@ def get_frame(aChunk):
 
 
 def flatten_list(list_of_lists):
-    return np.array(list(itertools.chain(*list_of_lists)), dtype=np.float32)
+    return list(itertools.chain(*list_of_lists))
